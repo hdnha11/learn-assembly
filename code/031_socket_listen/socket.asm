@@ -58,5 +58,20 @@ _bind:
 
   int 80h ; call the kernel
 
+; Preparing to listen the incoming connection (passive socket)
+; int listen(int sockfd, int backlog);
+; listen(sockfd, 0);
+_listen:
+  ; listen arguments
+  push byte 1  ; move 1 onto stack (backlog - max queue length argument)
+  push edi     ; push the file descriptor onto stack (socket fd)
+
+  mov ecx, esp ; move address of arguments into ecx (ptr to argument array)
+
+  mov ebx, 4   ; invoke subroutine LISTEN (sys_listen 4)
+  mov eax, 102 ; invoke SYS_SOCKETCALL (kernel opcode 102)
+
+  int 80h ; call the kernel
+
 _exit:
   call quit ; exit the program
